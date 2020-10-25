@@ -12,6 +12,8 @@ tabulka_export= tabulka_cela.loc[:, ["pageFunctionResult/localUniqueId","pageFun
 # prejmenuju si headery vsech sloupcu
 tabulka_export.rename(columns={"pageFunctionResult/localUniqueId":"local_unique_id","pageFunctionResult/address":"address","pageFunctionResult/countryCode":"Country", "pageFunctionResult/gpsCoord/lat":"lat", "pageFunctionResult/gpsCoord/lon":"lng", "pageFunctionResult/gpsCoordType":"coordinate_type","pageFunctionResult/livingArea":"living_area", "pageFunctionResult/price":"price", "pageFunctionResult/priceCurrency":"currency", "pageFunctionResult/title":"title", "pageFunctionResult/type":"type", "pageFunctionResult/offerType":"offer_type","pageFunctionResult/url":"url"}, inplace=True)
 
+
+
 #prejmenuju si df index
 #tabulka_export.index.names=['local_unique_id']
 

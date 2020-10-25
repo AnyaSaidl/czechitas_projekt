@@ -14,14 +14,17 @@ bez_duplikatu = df.drop_duplicates(subset=['address','living_area', 'price'])
 bez_nul = bez_duplikatu.dropna(subset = ['price'])
 bez_nul.to_csv("bez_nul.csv")
 
+#nactu si soubor jenom s inzeraty v praze a s kody uj
+realitky_praha=pandas.read_csv("realitky_praha.csv", encoding="utf-8", low_memory=False)
+
 # ***************************************************
 
 # vyfiltruju si inzeraty na prodej bytu pouze z cr 
-prodej_bytu = bez_nul[
-    bez_nul["Country"].str.contains("cz", na=False, case=False)
+prodej_bytu =  realitky_praha[
+    #bez_nul["Country"].str.contains("cz", na=False, case=False)
     #& df["address"].str.contains("praha", na=False, case=False)
-    & bez_nul["type"].str.contains("apartment", na=False, case=False)
-    & bez_nul["offer_type"].str.contains("sale", na=False, case=False)
+    realitky_praha["type"].str.contains("apartment", na=False, case=False)
+    & realitky_praha["offer_type"].str.contains("sale", na=False, case=False)
 ]
 
 # zjistim kolik nabidek na prodej bytu mame
@@ -48,7 +51,7 @@ print(
 )
 
 # vytvorim si novy df kde bude pouze cena, plocha,identifikatory a prumer prodej za m2
-cena_plocha = df_1.loc[:, [ "local_unique_id", "price", "living_area"]]
+cena_plocha = df_1.loc[:, [ "local_unique_id", "price", "living_area","kod_zsj_d","kod_cast_obec","upper_name","lat","lng"]]
 cena_plocha["prumer"] = cena_plocha.price / cena_plocha.living_area
 cena_plocha.info()
 cena_plocha.to_csv("prumer_prodej.csv")
@@ -56,11 +59,11 @@ cena_plocha.to_csv("prumer_prodej.csv")
 # **************************************************
 
 # vyfiltruju si inzeraty na pronajem bytu pouze z cr a prahy
-pronajem_bytu = bez_nul[
-    bez_nul["Country"].str.contains("cz", na=False, case=False)
+pronajem_bytu = realitky_praha[
+    #bez_nul["Country"].str.contains("cz", na=False, case=False)
     #& df["address"].str.contains("praha", na=False, case=False)
-    & bez_nul["type"].str.contains("apartment", na=False, case=False)
-    & bez_nul["offer_type"].str.contains("rent", na=False, case=False)
+    realitky_praha["type"].str.contains("apartment", na=False, case=False)
+    & realitky_praha["offer_type"].str.contains("rent", na=False, case=False)
 ]
 
 # zjistim kolik nabidek na pronajem bytu v Praze mame
@@ -87,7 +90,7 @@ print(
 )
 
 # vytvorim si novy df kde bude pouze cena, plocha,identifikatory a prumer pronajmu za m2
-cena_plocha_2 = df_2.loc[:, ["local_unique_id", "price", "living_area"]]
+cena_plocha_2 = df_2.loc[:, ["local_unique_id", "price", "living_area","kod_zsj_d","kod_cast_obec","upper_name","lat","lng"]]
 cena_plocha_2["prumer"] = cena_plocha_2.price / cena_plocha_2.living_area
 cena_plocha_2.info()
 cena_plocha_2.to_csv("prumer_pronajem.csv")
