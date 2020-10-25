@@ -51,12 +51,21 @@ print(
 )
 
 # vytvorim si novy df kde bude pouze cena, plocha,identifikatory a prumer prodej za m2
-cena_plocha = df_1.loc[:, [ "local_unique_id", "price", "living_area","kod_zsj_d","kod_cast_obec","upper_name","lat","lng"]]
+cena_plocha = df_1.loc[:, [ "local_unique_id", "price", "living_area","kod_zsj_d","lat","lng"]]
 cena_plocha["prumer"] = cena_plocha.price / cena_plocha.living_area
+
+#zmena nazvu index column
+cena_plocha.index.names=['id']
+
+#zmena datoveho typu
+cena_plocha['kod_zsj_d'] = cena_plocha['kod_zsj_d'].astype(str)
+#doplnění nul do 7 míst
+cena_plocha['kod_zsj_d'] = cena_plocha['kod_zsj_d'].apply(lambda x: x.zfill(7))
+
 cena_plocha.info()
 cena_plocha.to_csv("prumer_prodej.csv")
 
-# **************************************************
+print("**************************************************")
 
 # vyfiltruju si inzeraty na pronajem bytu pouze z cr a prahy
 pronajem_bytu = realitky_praha[
@@ -90,10 +99,21 @@ print(
 )
 
 # vytvorim si novy df kde bude pouze cena, plocha,identifikatory a prumer pronajmu za m2
-cena_plocha_2 = df_2.loc[:, ["local_unique_id", "price", "living_area","kod_zsj_d","kod_cast_obec","upper_name","lat","lng"]]
+cena_plocha_2 = df_2.loc[:, ["local_unique_id", "price", "living_area","kod_zsj_d","lat","lng"]]
 cena_plocha_2["prumer"] = cena_plocha_2.price / cena_plocha_2.living_area
+
+#zmena nazvu index column
+cena_plocha_2.index.names=['id']
+
+#změna datového typu
+cena_plocha_2['kod_zsj_d'] = cena_plocha_2['kod_zsj_d'].astype(str)
+#doplnění nul do 7 míst
+cena_plocha_2['kod_zsj_d'] = cena_plocha_2['kod_zsj_d'].apply(lambda x: x.zfill(7))
+
+
 cena_plocha_2.info()
 cena_plocha_2.to_csv("prumer_pronajem.csv")
+
 
 #nasteveni limitu pro zobrazovani inzeratu prodeje
 prodej_bytu_df= pandas.read_csv(
@@ -108,3 +128,20 @@ pronajem_bytu_df= pandas.read_csv(
 )
 limity_pronajem=pronajem_bytu_df[(pronajem_bytu_df['price']>=3500) & (pronajem_bytu_df['price']<=500000)]
 limity_pronajem.to_csv("limity_pronajem.csv")
+
+
+#spojime si nabidku prodeje a pronajmu
+realitni_trh_praha=[pronajem_bytu, prodej_bytu]
+spojena = pandas.concat(realitni_trh_praha)
+spojena = spojena.drop(spojena.columns[[0, 1, 4, 7, 8, 10, 12, 16, 17]], axis=1)
+#print(spojena)
+spojena.index.names=['id']
+
+#změna datového typu
+spojena['kod_zsj_d'] = spojena['kod_zsj_d'].astype(str)
+#doplnění nul do 7 míst
+spojena['kod_zsj_d'] = spojena['kod_zsj_d'].apply(lambda x: x.zfill(7))
+
+spojena.to_csv("inzeraty_prodej_pronajem.csv")
+spojena.info()
+

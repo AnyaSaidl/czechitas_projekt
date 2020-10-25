@@ -18,7 +18,13 @@ realitky_uj=pd.merge(realitky_zsjd,obce_kod,on='kod_cast_obec' )
 #vyfiltrujeme pouze Prahu
 realitky_praha = realitky_uj[realitky_uj.apply(lambda row: row['upper_name'].lower() == 'praha', axis=1)]
 
+#změna datového typu
+realitky_praha['kod_zsj_d'] = realitky_praha['kod_zsj_d'].astype(str)
+#doplnění nul do 7 míst
+realitky_praha['kod_zsj_d'] = realitky_praha['kod_zsj_d'].apply(lambda x: x.zfill(7))
+
+#změna datového typu u ceny
+realitky_praha['price'] = realitky_praha['price'].astype(int)
+
 realitky_praha.to_csv("realitky_praha.csv")
-
-
 realitky_praha.info()
