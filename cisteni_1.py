@@ -131,7 +131,7 @@ limity_pronajem.to_csv("limity_pronajem.csv")
 
 
 #spojime si nabidku prodeje a pronajmu
-realitni_trh_praha=[pronajem_bytu, prodej_bytu]
+realitni_trh_praha=[limity_prodej, limity_pronajem]
 spojena = pandas.concat(realitni_trh_praha)
 spojena = spojena.drop(spojena.columns[[0, 1, 4, 7, 8, 10, 12, 16, 17]], axis=1)
 #print(spojena)
